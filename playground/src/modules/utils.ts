@@ -42,12 +42,14 @@ export async function testDB(dialect: Dialect) {
   console.log(await sql`PRAGMA table_info(${sql.table('test')});`.execute(db))
 
   for (let i = 0; i < 1e2; i++) {
-    await db.insertInto('test')
-      .values({
-        name: `test at ${Date.now()}`,
-        blobtest: Uint8Array.from([2, 3, 4, 5, 6, 7, 8]),
-      })
-      .execute()
+    await db.transaction().execute((trx) => {
+      return trx.insertInto('test')
+        .values({
+          name: `test at ${Date.now()}`,
+          blobtest: Uint8Array.from([2, 3, 4, 5, 6, 7, 8]),
+        })
+        .execute()
+    })
   }
 
   return db.selectFrom('test').selectAll().execute()
