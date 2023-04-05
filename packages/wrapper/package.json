@@ -1,0 +1,51 @@
+{
+  "name": "kysely-wrapper-sqlite",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "",
+  "author": {
+    "name": "subframe7536",
+    "email": "1667077010@qq.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/subframe7536/kysely-sqlite#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/subframe7536/kysely-sqlite.git"
+  },
+  "bugs": "https://github.com/subframe7536/kysely-sqlite/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "unbuild",
+    "build": "unbuild --stub"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "kysely-plugin-serialize": "workspace:*",
+    "kysely-wasm": "workspace:*"
+  }
+}

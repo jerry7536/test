@@ -1,0 +1,51 @@
+{
+  "name": "kysely-sqlite",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "",
+  "author": {
+    "name": "subframe7536",
+    "email": "1667077010@qq.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/subframe7536/kysely-sqlite.git"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "clean": "rimraf packages/*/{dist,es,lib}",
+    "build": "pnpm clean && pnpm -r -F \"./packages/*\" build",
+    "release": "bumpp package.json packages/**/package.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@subframe7536/eslint-config": "^0.1.0",
+    "@types/node": "^18.11.18",
+    "bumpp": "^8.2.1",
+    "changelogithub": "^0.12.7",
+    "eslint": "^8.33.0",
+    "happy-dom": "^8.2.6",
+    "husky": "^8.0.3",
+    "kysely": "^0.24.2",
+    "lint-staged": "^13.1.1",
+    "rimraf": "^3.0.2",
+    "tsx": "^3.12.3",
+    "typescript": "^4.9.5",
+    "unbuild": "^1.1.1",
+    "vite": "^4.1.1",
+    "vitest": "^0.28.4"
+  },
+  "lint-staged": {
+    "*": [
+      "eslint --fix"
+    ]
+  }
+}
