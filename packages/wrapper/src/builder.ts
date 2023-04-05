@@ -1,44 +1,28 @@
-import type { Compilable, LogEvent, RawBuilder, Sql, Transaction } from 'kysely'
-import { Kysely, SqliteDialect, sql } from 'kysely'
+import type { Compilable, KyselyPlugin, LogEvent, RawBuilder, Sql, Transaction } from 'kysely'
+import { Kysely, sql } from 'kysely'
 import type { DataTypeExpression } from 'kysely/dist/cjs/parser/data-type-parser'
 import { SqliteSerializePlugin } from 'kysely-plugin-serialize'
 import { isBoolean, isString } from './util'
 import type { ITable, SqliteDBOption, TriggerEvent } from './types'
 import { DBStatus } from './types'
+import { getDialect } from './dialectFactory'
 
 export class SqliteDB<DB extends Record<string, any>> {
   public kysely!: Kysely<DB>
   private status!: DBStatus
   private tableMap!: Map<string, ITable<DB[Extract<keyof DB, string>]>>
-  public platform: 'nodejs' | 'browser'
   constructor(option: SqliteDBOption<DB>) {
-    const { dialectOption, tables, dropTableBeforeInit: truncateBeforeInit, errorLogger, queryLogger, plugins } = option
-    this.platform = dialectOption.platform
-    // let dialect
-    // if (dialectOption.platform === 'browser') {
-    //   dialect = new SqljsDialect(dialectOption)
-    // } else if (dialectOption.platform === 'nodejs') {
-    //   dialect = new SqliteDialect({
-    //     database: dialectOption.database,
-    //     onCreateConnection: dialectOption.onCreateConnection,
-    //   })
-    // } else {
-    //   throw new Error('platform unsupported!')
-    // }
-    if (dialectOption.platform !== 'nodejs') {
-      return
-    }
+    const { dialect, tables, dropTableBeforeInit: truncateBeforeInit, errorLogger, queryLogger, plugins: additionalPlugin } = option
+    const plugins: KyselyPlugin[] = [new SqliteSerializePlugin()]
+    additionalPlugin && plugins.push(...additionalPlugin)
     this.kysely = new Kysely<DB>({
-      dialect: new SqliteDialect({
-        database: dialectOption.database,
-        onCreateConnection: dialectOption.onCreateConnection,
-      }),
+      dialect: getDialect(dialect),
       log: (event: LogEvent) => {
         event.level === 'error'
           ? (errorLogger && errorLogger(event.error))
           : (queryLogger && queryLogger(event.query, event.queryDurationMillis))
       },
-      plugins: plugins ?? [new SqliteSerializePlugin()],
+      plugins,
     })
     this.status = truncateBeforeInit
       ? DBStatus.needDrop
@@ -71,17 +55,6 @@ export class SqliteDB<DB extends Record<string, any>> {
   }
 
   public async init(dropTableBeforeInit = false) {
-    if (this.platform === 'browser') {
-      await sql`
-        PRAGMA page_size = 8192;
-        PRAGMA journal_mode = MEMORY;
-        PRAGMA locking_mode = MEMORY;
-        PRAGMA temp_store = 2;
-      `.execute(this.kysely).catch((err) => {
-          console.error(err)
-          return undefined
-        })
-    }
     for (const [tableName, table] of this.tableMap) {
       const { column: columnList, property: tableProperty } = table
       if (dropTableBeforeInit || this.status === DBStatus.needDrop) {

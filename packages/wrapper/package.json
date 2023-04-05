@@ -1,7 +1,7 @@
 {
   "name": "kysely-wrapper-sqlite",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "author": {
     "name": "subframe7536",
@@ -47,5 +47,11 @@
   "dependencies": {
     "kysely-plugin-serialize": "workspace:*",
     "kysely-wasm": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.3",
+    "@types/sql.js": "^1.4.4",
+    "better-sqlite3": "^8.2.0",
+    "sql.js": "^1.8.0"
   }
 }

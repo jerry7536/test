@@ -1,19 +1,22 @@
-import type { KyselyPlugin, SqliteDialectConfig } from 'kysely'
+import type { DatabaseConnection, Dialect, KyselyPlugin } from 'kysely'
 import type { CompiledQuery } from 'kysely/dist/cjs/query-compiler/compiled-query'
 
-// todo))
-export type DBOption = {
-  platform: 'browser' | 'node'
-  type: 'file' | 'indexeddb' | 'memory'
-  path?: string
-}
-type Option = {
-  platform: 'nodejs'
-  type: 'file' | 'memory'
+export type DialectOption = ({
+  lib: 'better-sqlite3'
+  /**
+   * to store data in memory, use ':memory:'
+   * @see {@link https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md#new-databasepath-options document}
+   */
   path: string
-} & {
-  platform: 'browser'
-  type: 'opfs' | 'indexeddb' | 'localStorage' | 'memory'
+} | {
+  lib: 'official-wasm'
+  path: string
+} | {
+  lib: 'sql.js'
+  buffer?: Uint8Array
+  onWrite?: (buffer: Uint8Array) => void
+}) & {
+  onCreateConnection?: (connection: DatabaseConnection) => Promise<void>
 }
 export type TriggerEvent = 'insert' | 'update' | 'delete'
 export type column =
@@ -53,9 +56,7 @@ export enum DBStatus {
 }
 export type SqliteDBOption<T> = {
   tables: Tables<T>
-  dialectOption:
-  | { platform: 'browser' } & {}
-  | { platform: 'nodejs' } & SqliteDialectConfig
+  dialect: DialectOption | Dialect
   dropTableBeforeInit?: boolean
   queryLogger?: (queryInfo: CompiledQuery, time: number) => any
   errorLogger?: (reason: unknown) => any

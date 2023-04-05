@@ -1,9 +1,12 @@
+import type { DatabaseConnection } from 'kysely'
+import { CompiledQuery } from 'kysely'
 import { AbstractSqliteConnection, BaseDriver } from '../baseDriver'
 import type { SqlJSDB } from './type'
 import type { SqlJsDialectConfig } from '.'
 
 export class SqlJsDriver extends BaseDriver {
   readonly #config: SqlJsDialectConfig
+  declare connection?: SqlJsConnection | undefined
 
   #db?: SqlJSDB
 
@@ -27,10 +30,26 @@ export class SqlJsDriver extends BaseDriver {
       await this.#config.onCreateConnection(this.connection)
     }
   }
+
+  async beginTransaction(connection: DatabaseConnection): Promise<void> {
+    await connection.executeQuery(CompiledQuery.raw('begin'))
+    this.connection && this.connection.transactionNum++
+  }
+
+  async commitTransaction(connection: DatabaseConnection): Promise<void> {
+    await connection.executeQuery(CompiledQuery.raw('commit'))
+    this.connection && this.connection.transactionNum--
+  }
+
+  async rollbackTransaction(connection: DatabaseConnection): Promise<void> {
+    await connection.executeQuery(CompiledQuery.raw('rollback'))
+    this.connection && this.connection.transactionNum--
+  }
 }
 class SqlJsConnection extends AbstractSqliteConnection {
   readonly #db: SqlJSDB
   readonly #onWrite: ((buffer: Uint8Array) => void) | undefined
+  transactionNum = 0
 
   constructor(db: SqlJSDB, onWrite?: (buffer: Uint8Array) => void) {
     super()
@@ -53,10 +72,11 @@ class SqlJsConnection extends AbstractSqliteConnection {
     this.#db.run(sql, param as any[])
     const insertId = BigInt(this.query('SELECT last_insert_rowid() as id')[0].id)
     const numAffectedRows = BigInt(this.#db.getRowsModified())
-    this.#onWrite && this.#onWrite(this.#db.export())
+    this.transactionNum === 0 && this.#onWrite && this.#onWrite(this.#db.export())
     return {
       numAffectedRows,
       insertId,
     }
   }
 }
+export const TRANSACTION_REGEX = /^(\s|;)*(?:begin|end|commit|rollback)/i
