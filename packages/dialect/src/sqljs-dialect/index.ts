@@ -1,5 +1,5 @@
-import type { DatabaseConnection, DatabaseIntrospector, Dialect, DialectAdapter, Driver, Kysely, QueryCompiler } from 'kysely'
-import { SqliteAdapter, SqliteIntrospector, SqliteQueryCompiler } from 'kysely'
+import type { DatabaseConnection, Driver } from 'kysely'
+import { BaseDialect } from '../baseDialect'
 import { SqlJsDriver } from './driver'
 import type { SqlJSDB } from './type'
 
@@ -8,29 +8,18 @@ export interface SqlJsDialectConfig {
   onWrite?: (buffer: Uint8Array) => void
   onCreateConnection?: (connection: DatabaseConnection) => Promise<void>
 }
-export class SqlJsDialect implements Dialect {
+export class SqlJsDialect extends BaseDialect {
   readonly #config: SqlJsDialectConfig
 
   /**
    * currently no support for bigint
    */
   constructor(config: SqlJsDialectConfig) {
+    super()
     this.#config = config
   }
 
   createDriver(): Driver {
     return new SqlJsDriver(this.#config)
-  }
-
-  createQueryCompiler(): QueryCompiler {
-    return new SqliteQueryCompiler()
-  }
-
-  createAdapter(): DialectAdapter {
-    return new SqliteAdapter()
-  }
-
-  createIntrospector(db: Kysely<any>): DatabaseIntrospector {
-    return new SqliteIntrospector(db)
   }
 }

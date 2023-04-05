@@ -1,5 +1,5 @@
-import type { DatabaseConnection, Dialect, Kysely } from 'kysely'
-import { SqliteAdapter, SqliteIntrospector, SqliteQueryCompiler } from 'kysely'
+import type { DatabaseConnection } from 'kysely'
+import { BaseDialect } from '../baseDialect'
 import { OfficialSqliteWasmDriver } from './driver'
 import type { OfficialSqliteWasmDB } from './type'
 
@@ -8,7 +8,7 @@ export interface OfficialSqliteWasmDialectConfig {
   onCreateConnection?: (connection: DatabaseConnection) => Promise<void>
 }
 
-export class OfficialSqliteWasmDialect implements Dialect {
+export class OfficialSqliteWasmDialect extends BaseDialect {
   #config: OfficialSqliteWasmDialectConfig
   /**
    * use official wasm build, support bigint
@@ -53,22 +53,11 @@ export class OfficialSqliteWasmDialect implements Dialect {
    * ```
   */
   constructor(config: OfficialSqliteWasmDialectConfig) {
+    super()
     this.#config = config
-  }
-
-  createAdapter() {
-    return new SqliteAdapter()
   }
 
   createDriver() {
     return new OfficialSqliteWasmDriver(this.#config)
-  }
-
-  createIntrospector(db: Kysely<unknown>) {
-    return new SqliteIntrospector(db)
-  }
-
-  createQueryCompiler() {
-    return new SqliteQueryCompiler()
   }
 }

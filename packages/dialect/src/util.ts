@@ -69,10 +69,12 @@ export function throttle<T>({ func, delay = 2000, maxCalls = 1000 }: ThrottlePar
  * await addPragma(conn, 5000, 32 * 1024);
  * ```
  */
-export async function optimzePragmaConfig(conn: DatabaseConnection, cacheSize = 5000, pageSize = 32 * 1024): Promise<void> {
+export async function optimzePragma(conn: DatabaseConnection, cacheSize = 5000, pageSize = 32 * 1024): Promise<void> {
   await conn.executeQuery(CompiledQuery.raw(
     `PRAGMA cache_size=${cacheSize};
      PRAGMA journal_mode=MEMORY;
+     PRAGMA locking_mode = MEMORY;
+     PRAGMA temp_store = 2;
      PRAGMA page_size=${pageSize};`,
   ))
 }
