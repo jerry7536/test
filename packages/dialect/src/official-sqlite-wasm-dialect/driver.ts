@@ -1,4 +1,4 @@
-import { AbstractSqliteConnection, BaseDriver } from '../baseDriver'
+import { BaseDriver, BaseSqliteConnection } from '../baseDriver'
 import type { OfficialSqliteWasmDB } from './type'
 import type { OfficialSqliteWasmDialectConfig } from '.'
 
@@ -20,7 +20,7 @@ export class OfficialSqliteWasmDriver extends BaseDriver {
     }
   }
 }
-class OfficailSqliteWasmConnection extends AbstractSqliteConnection {
+class OfficailSqliteWasmConnection extends BaseSqliteConnection {
   #db: OfficialSqliteWasmDB
   constructor(db: any) {
     super()

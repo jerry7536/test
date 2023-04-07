@@ -1,6 +1,6 @@
 import type { DatabaseConnection } from 'kysely'
 import { CompiledQuery } from 'kysely'
-import { AbstractSqliteConnection, BaseDriver } from '../baseDriver'
+import { BaseDriver, BaseSqliteConnection } from '../baseDriver'
 import type { SqlJSDB } from './type'
 import type { SqlJsDialectConfig } from '.'
 
@@ -46,7 +46,7 @@ export class SqlJsDriver extends BaseDriver {
     this.connection && this.connection.transactionNum--
   }
 }
-class SqlJsConnection extends AbstractSqliteConnection {
+class SqlJsConnection extends BaseSqliteConnection {
   readonly #db: SqlJSDB
   readonly #onWrite: ((buffer: Uint8Array) => void) | undefined
   transactionNum = 0
