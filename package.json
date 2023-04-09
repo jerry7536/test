@@ -15,7 +15,7 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "clean": "rimraf packages/*/{dist,es,lib}",
+    "clean": "rimraf packages/*/dist",
     "build": "pnpm clean && pnpm -r -F \"./packages/*\" build",
     "release": "bumpp package.json packages/**/package.json",
     "test": "vitest run",

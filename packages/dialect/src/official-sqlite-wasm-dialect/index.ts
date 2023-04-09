@@ -11,7 +11,9 @@ export interface OfficialSqliteWasmDialectConfig {
 export class OfficialSqliteWasmDialect extends BaseDialect {
   #config: OfficialSqliteWasmDialectConfig
   /**
-   * use official wasm build, support bigint
+   * use official wasm build, support bigint, recommend to use opfs,
+   * see {@link https://sqlite.org/forum/forumpost/59097f57cbe647a2d1950fab93e7ab82dd24c1e384d38b90ec1e2f03a2a4e580 this}
+   * and {@link https://sqlite.org/forum/forumpost/8f50dc99149a6cedade784595238f45aa912144fae81821d5f9db31965f754dd this}
    *
    * @example
    * add type for `jswasm/sqlite3-bundler-friendly.mjs`:

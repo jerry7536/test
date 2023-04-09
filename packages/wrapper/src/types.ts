@@ -14,7 +14,12 @@ export type DialectOption = ({
 } | {
   lib: 'sql.js'
   buffer?: Uint8Array
-  onWrite?: (buffer: Uint8Array) => void
+  onWrite?: {
+    func: (buffer: Uint8Array) => void
+    isThrottle?: boolean
+    delay?: number
+    maxCalls?: number
+  }
 }) & {
   onCreateConnection?: (connection: DatabaseConnection) => Promise<void>
 }

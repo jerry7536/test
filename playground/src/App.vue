@@ -3,8 +3,8 @@ import { useDB } from './modules/mainThread'
 import Worker from './modules/sqljsWorker?worker'
 import OfficialWorker from './modules/officialWasmWorker?worker'
 import { deleteFile } from './modules/indexeddb'
-import { testWaSqlite } from './wa-sqlite'
-// import { testWaSqlite } from './wa-sqlite'
+import { testCRSqlite } from './modules/crsqlite'
+
 const worker = new Worker()
 const { result, run } = useDB()
 const officialWorker = new OfficialWorker()
@@ -29,9 +29,10 @@ async function clear() {
   } catch { }
   console.log('clear all')
 }
+testCRSqlite()
 // todo)) test
-const url = new URL('../node_modules/wa-sqlite/dist/wa-sqlite-async.wasm', import.meta.url).href
-testWaSqlite(url, 'wa-sqlite', 'create table t(a,b);insert into t (a,b) values (?,?)', [1, 2])
+// const url = new URL('../node_modules/wa-sqlite/dist/wa-sqlite-async.wasm', import.meta.url).href
+// testWaSqlite(url, 'wa-sqlite', 'create table t(a,b);insert into t (a,b) values (?,?)', [1, 2])
 </script>
 
 <template>

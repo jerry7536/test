@@ -2,7 +2,7 @@ import { BaseDriver, BaseSqliteConnection } from '../baseDriver'
 import type { TauriSqlDB } from './type'
 import type { TauriSqlDialectConfig } from '.'
 
-export class OfficialSqliteWasmDriver extends BaseDriver {
+export class TaruiSqlDriver extends BaseDriver {
   #config: TauriSqlDialectConfig
   #db?: TauriSqlDB
   constructor(config: TauriSqlDialectConfig) {

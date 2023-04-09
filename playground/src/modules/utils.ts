@@ -23,7 +23,7 @@ import { Kysely, sql } from 'kysely'
 //   }
 //   return hash
 // }
-interface DB {
+export interface DB {
   test: TestTable
 }
 interface TestTable {

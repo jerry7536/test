@@ -1,8 +1,13 @@
-import type { Dialect } from 'kysely'
+import type { DatabaseConnection, Dialect } from 'kysely'
 import { SqliteDialect } from 'kysely'
 import Databse from 'better-sqlite3'
 import { OfficialSqliteWasmDialect, SqlJsDialect, optimzePragma } from 'kysely-wasm'
 import type { DialectOption } from './types'
+
+async function onCreateConnection(conn: DatabaseConnection, config: DialectOption) {
+  await optimzePragma(conn)
+  config.onCreateConnection && config.onCreateConnection(conn)
+}
 
 export function getDialect(config: DialectOption | Dialect) {
   if (!('lib' in config)) {
@@ -12,32 +17,24 @@ export function getDialect(config: DialectOption | Dialect) {
     case 'better-sqlite3':
       return new SqliteDialect({
         database: new Databse(config.path),
-        onCreateConnection: config.onCreateConnection,
+        onCreateConnection: async conn => onCreateConnection(conn, config),
       })
     case 'sql.js':
       return new SqlJsDialect({
         database: () => getSqljsDB(config.buffer),
         onWrite: config.onWrite,
-        onCreateConnection: async (conn) => {
-          optimzePragma(conn)
-          config.onCreateConnection && config.onCreateConnection(conn)
-        },
+        onCreateConnection: async conn => onCreateConnection(conn, config),
       })
     case 'official-wasm':
       return new OfficialSqliteWasmDialect({
         database: () => getOfficialWasmDB(config.path),
-        onCreateConnection: async (conn) => {
-          optimzePragma(conn)
-          config.onCreateConnection && config.onCreateConnection(conn)
-        },
+        onCreateConnection: async conn => onCreateConnection(conn, config),
       })
   }
 }
 async function getSqljsDB(buffer?: Uint8Array) {
   const initSqlJs = await import('sql.js')
-  const SQL = await initSqlJs.default({
-    // locateFile: () => new URL('../node_modules/sql.js/dist/sql-wasm.wasm', import.meta.url).href,
-  })
+  const SQL = await initSqlJs.default()
   return new SQL.Database(buffer)
 }
 async function getOfficialWasmDB(path: string) {

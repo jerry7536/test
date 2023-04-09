@@ -1,14 +1,7 @@
-import { SqlJsDialect, throttle } from 'kysely-wasm'
+import { SqlJsDialect } from 'kysely-wasm'
 import InitSqlJS from 'sql.js'
-import { writeFile } from './indexeddb'
+import { loadFile, writeFile } from './indexeddb'
 import { testDB } from './utils'
-
-const throttleFn = throttle<Uint8Array>({
-  func: (s) => {
-    console.log(`[sqljs worker] write to indexeddb, length: ${s.length}`)
-    writeFile('sqlijsWorker', s)
-  },
-})
 
 const dialect = new SqlJsDialect({
   async database() {
@@ -16,10 +9,13 @@ const dialect = new SqlJsDialect({
       // locateFile: file => `https://sql.js.org/dist/${file}`,
       locateFile: () => new URL('../../node_modules/sql.js/dist/sql-wasm.wasm', import.meta.url).href,
     })
-    return new SQL.Database()
+    return new SQL.Database(await loadFile('sqlijsWorker'))
   },
-  onWrite(buffer) {
-    throttleFn(buffer)
+  onWrite: {
+    func(data) {
+      console.log(`[sqljs worker] write to indexeddb, length: ${data.length}`)
+      writeFile('sqlijsWorker', data)
+    },
   },
 })
 onmessage = () => {

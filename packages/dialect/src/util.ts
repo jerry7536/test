@@ -14,11 +14,9 @@ import { CompiledQuery } from 'kysely'
  * ```
  */
 export async function optimzePragma(conn: DatabaseConnection, cacheSize = 4096, pageSize = 32 * 1024): Promise<void> {
-  await conn.executeQuery(CompiledQuery.raw(
-    `PRAGMA cache_size=${cacheSize};
-     PRAGMA journal_mode=MEMORY;
-     PRAGMA locking_mode = MEMORY;
-     PRAGMA temp_store = 2;
-     PRAGMA page_size=${pageSize};`,
-  ))
+  await conn.executeQuery(CompiledQuery.raw(`PRAGMA cache_size = ${cacheSize};`))
+  await conn.executeQuery(CompiledQuery.raw('PRAGMA journal_mode = MEMORY;'))
+  await conn.executeQuery(CompiledQuery.raw('PRAGMA locking_mode = MEMORY;'))
+  await conn.executeQuery(CompiledQuery.raw('PRAGMA temp_store = 2;'))
+  await conn.executeQuery(CompiledQuery.raw(`PRAGMA page_size = ${pageSize};`))
 }

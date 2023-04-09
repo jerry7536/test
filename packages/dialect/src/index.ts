@@ -1,3 +1,5 @@
+export * from './tauri-sql-dialect'
+export * from './crsqlite-dialect'
 export * from './sqljs-dialect'
 export * from './official-sqlite-wasm-dialect'
 export * from './empty-dialect'

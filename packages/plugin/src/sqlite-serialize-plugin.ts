@@ -4,7 +4,7 @@ import { SerializeParametersTransformer } from './sqlite-serialize-transformer'
 import type { Deserializer, Serializer } from './sqlite-serialize'
 import { defaultDeserializer } from './sqlite-serialize'
 
-export interface SerializeParametersPluginOptions {
+export interface SqliteSerializePluginOptions {
   /**
    * Function responsible for serialization of parameters.
    * Defaults to `JSON.stringify` of boolean, objects and arrays.
@@ -49,7 +49,7 @@ export interface SerializeParametersPluginOptions {
  *     database: new Database(":memory:"),
  *   }),
  *   plugins: [
- *     new SerializeParametersPlugin(),
+ *     new SqliteSerializePlugin(),
  *   ],
  * })
  *
@@ -71,7 +71,7 @@ export interface SerializeParametersPluginOptions {
  *     database: new Database(":memory:"),
  *   }),
  *   plugins: [
- *     new SerializeParametersPlugin({
+ *     new SqliteSerializePlugin({
  *         serializer: (value) => {
  *             if (value instanceof Date) {
  *                 return formatDatetime(value)
@@ -94,7 +94,7 @@ export class SqliteSerializePlugin implements KyselyPlugin {
   // readonly #deep: boolean
   #data: WeakMap<QueryId, string>
 
-  constructor(opt: SerializeParametersPluginOptions = {}) {
+  constructor(opt: SqliteSerializePluginOptions = {}) {
     // this.#deep = opt.deepDeserialize ?? false
     this.#serializeParametersTransformer = new SerializeParametersTransformer(
       opt.serializer,

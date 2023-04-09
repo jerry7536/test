@@ -21,7 +21,7 @@ describe('dialect test', () => {
       },
       onWrite: {
         func(buffer) {
-          console.log(buffer.length)
+          console.log(`size: ${buffer.length}`)
         },
         isThrottle: true,
       },
