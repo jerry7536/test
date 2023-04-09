@@ -19,8 +19,11 @@ describe('dialect test', () => {
         const SQL = await init()
         return new SQL.Database()
       },
-      onWrite(buffer) {
-        console.log(buffer.length)
+      onWrite: {
+        func(buffer) {
+          console.log(buffer.length)
+        },
+        isThrottle: true,
       },
     })
     const db = new Kysely<DB>({

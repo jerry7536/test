@@ -26,3 +26,5 @@ lib
 *.njsproj
 *.sln
 *.sw?
+
+.npmrc

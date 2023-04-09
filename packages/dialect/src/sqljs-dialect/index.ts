@@ -5,7 +5,12 @@ import type { SqlJSDB } from './type'
 
 export interface SqlJsDialectConfig {
   database: SqlJSDB | (() => Promise<SqlJSDB>)
-  onWrite?: (buffer: Uint8Array) => void
+  onWrite?: {
+    func: (buffer: Uint8Array) => void
+    isThrottle?: boolean
+    delay?: number
+    maxCalls?: number
+  }
   onCreateConnection?: (connection: DatabaseConnection) => Promise<void>
 }
 export class SqlJsDialect extends BaseDialect {
