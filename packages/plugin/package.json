@@ -38,9 +38,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
     "dev": "unbuild --stub",
-    "start": "tsx src/index.ts"
+    "build": "unbuild"
   },
   "publishConfig": {
     "access": "public"

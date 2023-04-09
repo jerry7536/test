@@ -8,6 +8,7 @@
     "jsx": "preserve",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "skipDefaultLibCheck": true,
     "esModuleInterop": true,
     "lib": [
       "ESNext",

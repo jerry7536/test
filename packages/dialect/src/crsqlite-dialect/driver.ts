@@ -14,31 +14,30 @@ export class CrSqliteDriver extends BaseDriver {
     this.#db = typeof this.#config.database === 'function'
       ? await this.#config.database()
       : this.#config.database
-    this.connection = new OfficailSqliteWasmConnection(this.#db)
+    this.connection = new CrSqliteConnection(this.#db)
     if (this.#config.onCreateConnection) {
       await this.#config.onCreateConnection(this.connection)
     }
   }
 }
-class OfficailSqliteWasmConnection extends BaseSqliteConnection {
+class CrSqliteConnection extends BaseSqliteConnection {
   #db: CrSqliteDB
+  #lastId = 0n
   constructor(db: any) {
     super()
     this.#db = db
+    this.#db.onUpdate((_, __, ___, id) => this.#lastId = id)
   }
 
-  async query(sql: string, param?: any[]): Promise<any[]> {
-    return this.#db.execO(sql, param ?? [])
+  async query(sql: string, param?: any[]) {
+    return this.#db.execO(sql, param)
   }
 
   async exec(sql: string, param?: any[]) {
-    this.#db.exec(sql, param ?? [])
-    const insertId = await new Promise((resolve) => {
-      this.#db.onUpdate((_, __, ___, id) => resolve(id))
-    })
+    await this.#db.exec(sql, param)
     return {
-      numAffectedRows: this.#db.api.change(this.#db.db),
-      insertId,
+      numAffectedRows: BigInt(this.#db.api.changes(this.#db.db)),
+      insertId: this.#lastId,
     }
   }
 }

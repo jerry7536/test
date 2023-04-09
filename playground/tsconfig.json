@@ -15,6 +15,7 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "types": [
       "node",

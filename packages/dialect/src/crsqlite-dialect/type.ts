@@ -1,8 +1,8 @@
 import type { BaseDB } from '../baseDriver'
 
 export interface CrSqliteDB extends BaseDB {
-  exec(sql: string, bind?: unknown[]): void
-  execO<T = any>(sql: string, bind?: unknown[]): T[]
+  exec(sql: string, bind?: any[]): Promise<void>
+  execO<T extends {}>(sql: string, bind?: any[]): Promise<T[]>
   onUpdate(cb: (
     type: any,
     dbName: string,
@@ -10,7 +10,7 @@ export interface CrSqliteDB extends BaseDB {
     rowid: bigint
   ) => void): void
   api: {
-    change(db: number): bigint
+    changes(db: number): number
   }
   db: number
 }

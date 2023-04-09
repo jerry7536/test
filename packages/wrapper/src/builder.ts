@@ -5,7 +5,6 @@ import { SqliteSerializePlugin } from 'kysely-plugin-serialize'
 import { isBoolean, isString } from './util'
 import type { ITable, SqliteDBOption, TriggerEvent } from './types'
 import { DBStatus } from './types'
-import { getDialect } from './dialectFactory'
 
 export class SqliteDB<DB extends Record<string, any>> {
   public kysely!: Kysely<DB>
@@ -16,7 +15,7 @@ export class SqliteDB<DB extends Record<string, any>> {
     const plugins: KyselyPlugin[] = [new SqliteSerializePlugin()]
     additionalPlugin && plugins.push(...additionalPlugin)
     this.kysely = new Kysely<DB>({
-      dialect: getDialect(dialect),
+      dialect,
       log: (event: LogEvent) => {
         event.level === 'error'
           ? (errorLogger && errorLogger(event.error))

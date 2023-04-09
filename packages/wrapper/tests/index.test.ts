@@ -1,6 +1,8 @@
 import { equal } from 'node:assert'
 import type { Generated } from 'kysely'
+import { SqliteDialect } from 'kysely'
 import { describe, test } from 'vitest'
+import Database from 'better-sqlite3'
 import { SqliteDB } from '../src'
 
 interface DB {
@@ -16,10 +18,7 @@ interface TestTable {
 describe('test', () => {
   test('test', async () => {
     const db = new SqliteDB<DB>({
-      dialect: {
-        lib: 'better-sqlite3',
-        path: ':memory:',
-      },
+      dialect: new SqliteDialect({ database: new Database(':memory:') }),
       tables: {
         test: {
           column: {

@@ -39,6 +39,7 @@ export async function testDB(dialect: Dialect) {
     .addColumn('blobtest', 'blob')
     .ifNotExists()
     .execute()
+  console.log('test')
   console.log(await sql`PRAGMA table_info(${sql.table('test')});`.execute(db))
 
   for (let i = 0; i < 1e2; i++) {

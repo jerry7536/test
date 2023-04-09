@@ -38,8 +38,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "unbuild",
-    "build": "unbuild --stub"
+    "dev": "unbuild --stub",
+    "build": "unbuild"
   },
   "publishConfig": {
     "access": "public"

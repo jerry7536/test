@@ -18,9 +18,11 @@ function testOfficialWasm() {
   officialWorker.postMessage('')
 }
 async function clear() {
+  console.clear()
   const root = await navigator.storage.getDirectory()
   await deleteFile('sqljs')
   await deleteFile('sqlijsWorker')
+  indexedDB.deleteDatabase('idb-batch-atomic')
   try {
     await root.removeEntry('test.db')
   } catch { }
@@ -29,7 +31,6 @@ async function clear() {
   } catch { }
   console.log('clear all')
 }
-testCRSqlite()
 // todo)) test
 // const url = new URL('../node_modules/wa-sqlite/dist/wa-sqlite-async.wasm', import.meta.url).href
 // testWaSqlite(url, 'wa-sqlite', 'create table t(a,b);insert into t (a,b) values (?,?)', [1, 2])
@@ -57,6 +58,9 @@ testCRSqlite()
   <div class="buttons">
     <button @click="testSqljsMain()">
       test sqljs in main thread
+    </button>
+    <button @click="testCRSqlite()">
+      test crsqlite in main thread
     </button>
     <button @click="testSqljsWorker()">
       test sqljs in Worker
