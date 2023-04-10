@@ -1,5 +1,5 @@
 {
-  "name": "kysely-wasm",
+  "name": "kysely-wasm-dialect",
   "type": "module",
   "version": "0.1.0",
   "description": "",

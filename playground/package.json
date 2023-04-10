@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "@vlcn.io/crsqlite-wasm": "^0.9.1",
-    "kysely-wasm": "workspace:*"
+    "kysely-wasm-dialect": "workspace:*"
   }
 }

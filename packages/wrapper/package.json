@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "kysely-plugin-serialize": "workspace:*",
-    "kysely-wasm": "workspace:*"
+    "kysely-wasm-dialect": "workspace:*"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.3",
