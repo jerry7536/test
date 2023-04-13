@@ -1,1 +1,1 @@
-# TSTemplate(monorepo)/tsup
+# wasm dialect

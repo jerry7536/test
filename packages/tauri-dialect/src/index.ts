@@ -1,5 +1,5 @@
-import type { DatabaseConnection, Driver } from 'kysely'
-import { BaseDialect } from '../baseDialect'
+import type { DatabaseConnection, DatabaseIntrospector, DialectAdapter, Driver, Kysely, QueryCompiler } from 'kysely'
+import { SqliteAdapter, SqliteIntrospector, SqliteQueryCompiler } from 'kysely'
 import { TaruiSqlDriver } from './driver'
 import type { TauriSqlDB } from './type'
 
@@ -18,17 +18,28 @@ export interface TauriSqlDialectConfig {
 /**
  * https://github.com/tauri-apps/plugins-workspace/tree/dev/plugins/sql
  */
-export class TauriSqlDialect extends BaseDialect {
+export class TauriSqlDialect {
   #config: TauriSqlDialectConfig
   /**
    * currently no support for bigint
    */
   constructor(config: TauriSqlDialectConfig) {
-    super()
     this.#config = config
   }
 
   createDriver(): Driver {
     return new TaruiSqlDriver(this.#config)
+  }
+
+  createQueryCompiler(): QueryCompiler {
+    return new SqliteQueryCompiler()
+  }
+
+  createAdapter(): DialectAdapter {
+    return new SqliteAdapter()
+  }
+
+  createIntrospector(db: Kysely<any>): DatabaseIntrospector {
+    return new SqliteIntrospector(db)
   }
 }
