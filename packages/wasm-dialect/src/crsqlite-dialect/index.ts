@@ -10,7 +10,8 @@ export interface CrSqliteDialectConfig {
 export class CrSqliteDialect extends BaseDialect {
   #config: CrSqliteDialectConfig
   /**
-   * {@link https://vlcn.io/js/wasm vlcn.io wasm}, using indexeddb db as backend
+   * dialect for {@link https://vlcn.io/js/wasm vlcn.io wasm},
+   * a {@link https://github.com/vlcn-io/wa-sqlite/tree/master/demo wa-sqlite} wrapper using indexeddb as backend
    */
   constructor(config: CrSqliteDialectConfig) {
     super()
