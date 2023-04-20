@@ -15,7 +15,7 @@ interface TestTable {
   blob: Uint8Array | number[] | Buffer | null
 }
 describe('plugin test', () => {
-  const database = new Database('test_plugin.db')
+  const database = new Database(':memory:')
   const db = new Kysely<DB>({
     dialect: new SqliteDialect({ database }),
     plugins: [new SqliteSerializePlugin()],

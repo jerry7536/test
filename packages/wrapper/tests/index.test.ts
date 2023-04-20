@@ -19,7 +19,7 @@ interface TestTable {
 describe('test', () => {
   test('test', async () => {
     const db = new SqliteDB<DB>({
-      dialect: new SqliteDialect({ database: new Database('test.db') }),
+      dialect: new SqliteDialect({ database: new Database(':memory:') }),
       tables: {
         test: {
           columns: {
