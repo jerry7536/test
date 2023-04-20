@@ -25,13 +25,18 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cz": "czg"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
     "@subframe7536/eslint-config": "^0.1.1",
     "@types/node": "^18.15.11",
     "bumpp": "^9.1.0",
     "changelogithub": "^0.12.9",
+    "cz-git": "^1.6.1",
+    "czg": "^1.6.1",
     "del-cli": "^5.0.0",
     "eslint": "^8.38.0",
     "happy-dom": "^9.8.2",
@@ -48,5 +53,10 @@
     "*": [
       "eslint --fix"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
   }
 }
