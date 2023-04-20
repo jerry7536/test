@@ -24,6 +24,11 @@ module.exports = {
     },
     types: [
       {
+        value: 'break',
+        name: 'break!:     have break changes',
+        emoji: ':triangular_flag_on_post:',
+      },
+      {
         value: 'feat',
         name: 'feat:     A new feature',
         emoji: ':sparkles:',
@@ -79,7 +84,7 @@ module.exports = {
         emoji: ':rewind:',
       },
     ],
-    useEmoji: false,
+    useEmoji: true,
     emojiAlign: 'center',
     themeColorCode: '',
     scopes: [],
