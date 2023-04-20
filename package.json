@@ -26,8 +26,7 @@
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
     "prepare": "husky install",
-    "cz": "czg",
-    "publish": "release-it --monorepo"
+    "cz": "czg"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.1",
