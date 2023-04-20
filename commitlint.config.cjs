@@ -1,3 +1,9 @@
+const execSync = require('node:child_process').execSync
+
+const issue = execSync('git rev-parse --abbrev-ref HEAD')
+  .toString()
+  .trim()
+  .split('_')[1]
 /** @type {import('cz-git').UserConfig} */
 module.exports = {
   rule: {
@@ -109,7 +115,8 @@ module.exports = {
         name: 'closed:   ISSUES has been processed',
       },
     ],
-    customIssuePrefixAlign: 'bottom',
+    customIssuePrefixAlign: !issue ? 'top' : 'bottom',
+    defaultIssues: !issue ? '' : `#${issue}`,
     emptyIssuePrefixAlias: 'skip',
     customIssuePrefixAlias: 'custom',
     allowCustomIssuePrefix: true,
@@ -117,7 +124,6 @@ module.exports = {
     confirmColorize: true,
     minSubjectLength: 0,
     defaultBody: '',
-    defaultIssues: '',
     defaultScope: '',
     defaultSubject: '',
   },
