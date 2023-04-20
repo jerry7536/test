@@ -7,7 +7,7 @@ import { defaultSerializer } from './sqlite-serialize'
 export class SerializeParametersTransformer extends OperationNodeTransformer {
   readonly #serializer: Serializer
 
-  constructor(serializer: Serializer | undefined) {
+  public constructor(serializer: Serializer | undefined) {
     super()
     this.#serializer = serializer || defaultSerializer
   }

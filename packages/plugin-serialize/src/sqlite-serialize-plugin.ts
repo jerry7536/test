@@ -7,12 +7,12 @@ import { defaultDeserializer } from './sqlite-serialize'
 export interface SqliteSerializePluginOptions {
   /**
    * Function responsible for serialization of parameters.
-   * Defaults to `JSON.stringify` of boolean, objects and arrays.
+   * Defaults to `JSON.stringify` of boolean, objects and arrays, buffer to array
    * @param parameter unknown
   */
   serializer?: Serializer
   /**
-    * Function responsible for deserialization of parameters. No BigInt process
+    * Function responsible for deserialization of parameters
     *
     * `number`/`null` ignore
     *
@@ -20,81 +20,83 @@ export interface SqliteSerializePluginOptions {
     *
     * `/^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?Z?$/` convert to Date
     *
-    * others convert to `JSON.parse`
+    * `blob` convert to `Uint8Array`
+    *
+    * others converted by `JSON.parse`
     *
     * @param parameter unknown
     */
   deserializer?: Deserializer
-  // deepDeserialize?: boolean
 }
 
-/**
- * reference from https://github.com/koskimas/kysely/pull/138
- *
- * The following example will return an error when using sqlite dialects, unless using this plugin:
- *
- * ```ts
- * interface Person {
- *   firstName: string
- *   lastName: string
- *   tags: string[]
- * }
- *
- * interface Database {
- *   person: Person
- * }
- *
- * const db = new Kysely<Database>({
- *   dialect: new SqliteDialect({
- *     database: new Database(":memory:"),
- *   }),
- *   plugins: [
- *     new SqliteSerializePlugin(),
- *   ],
- * })
- *
- * await db.insertInto('person')
- *   .values([{
- *     firstName: 'Jennifer',
- *     lastName: 'Aniston',
- *     tags: ['celebrity', 'actress'],
- *   }])
- *   .execute()
- * ```
- *
- *
- * You can also provide a custom serializer function:
- *
- * ```ts
- * const db = new Kysely<Database>({
- *   dialect: new SqliteDialect({
- *     database: new Database(":memory:"),
- *   }),
- *   plugins: [
- *     new SqliteSerializePlugin({
- *         serializer: (value) => {
- *             if (value instanceof Date) {
- *                 return formatDatetime(value)
- *             }
- *
- *             if (value !== null && typeof value === 'object') {
- *                 return JSON.stringify(value)
- *             }
- *
- *             return value
- *         }
- *     }),
- *   ],
- * })
- * ```
- */
 export class SqliteSerializePlugin implements KyselyPlugin {
   readonly #serializeParametersTransformer: SerializeParametersTransformer
   readonly #deserializer: Deserializer
   // readonly #deep: boolean
   #data: WeakMap<QueryId, string>
 
-  constructor(opt: SqliteSerializePluginOptions = {}) {
+  /**
+   * reference from https://github.com/koskimas/kysely/pull/138
+   *
+   * see {@link SqliteSerializePluginOptions plugin option}
+   *
+   * The following example will return an error when using sqlite dialects, unless using this plugin:
+   *
+   * ```ts
+   * interface Person {
+   *   firstName: string
+   *   lastName: string
+   *   tags: string[]
+   * }
+   *
+   * interface Database {
+   *   person: Person
+   * }
+   *
+   * const db = new Kysely<Database>({
+   *   dialect: new SqliteDialect({
+   *     database: new Database(":memory:"),
+   *   }),
+   *   plugins: [
+   *     new SqliteSerializePlugin(),
+   *   ],
+   * })
+   *
+   * await db.insertInto('person')
+   *   .values([{
+   *     firstName: 'Jennifer',
+   *     lastName: 'Aniston',
+   *     tags: ['celebrity', 'actress'],
+   *   }])
+   *   .execute()
+   * ```
+   *
+   * You can also provide a custom serializer function:
+   *
+   * ```ts
+   * const db = new Kysely<Database>({
+   *   dialect: new SqliteDialect({
+   *     database: new Database(":memory:"),
+   *   }),
+   *   plugins: [
+   *     new SqliteSerializePlugin({
+   *         serializer: (value) => {
+   *             if (value instanceof Date) {
+   *                 return formatDatetime(value)
+   *             }
+   *
+   *             if (value !== null && typeof value === 'object') {
+   *                 return JSON.stringify(value)
+   *             }
+   *
+   *             return value
+   *         }
+   *     }),
+   *   ],
+   * })
+   * ```
+   */
+  public constructor(opt: SqliteSerializePluginOptions = {}) {
     // this.#deep = opt.deepDeserialize ?? false
     this.#serializeParametersTransformer = new SerializeParametersTransformer(
       opt.serializer,
@@ -103,7 +105,7 @@ export class SqliteSerializePlugin implements KyselyPlugin {
     this.#data = new WeakMap()
   }
 
-  transformQuery(args: PluginTransformQueryArgs): RootOperationNode {
+  public transformQuery(args: PluginTransformQueryArgs): RootOperationNode {
     const { node, queryId } = args
     if (node.kind === 'SelectQueryNode') {
       this.#data.set(queryId, node.kind)
@@ -111,18 +113,17 @@ export class SqliteSerializePlugin implements KyselyPlugin {
     return this.#serializeParametersTransformer.transformNode(args.node)
   }
 
-  parseResult(rows: any[]): any[] {
-    return rows.map((v) => {
-      Object.keys(v).forEach(key =>
-        v[key] = typeof v[key] === 'string'
-          ? this.#deserializer(v[key])
-          : v[key],
-      )
-      return v
-    })
+  private async parseResult(rows: any[]) {
+    return await Promise.all(rows.map(async (row) => {
+      const deserializedRow = { ...row }
+      for (const key in deserializedRow) {
+        deserializedRow[key] = await this.#deserializer(deserializedRow[key])
+      }
+      return deserializedRow
+    }))
   }
 
-  async transformResult(
+  public async transformResult(
     args: PluginTransformResultArgs,
   ): Promise<QueryResult<UnknownRow>> {
     const { result, queryId } = args
@@ -131,7 +132,7 @@ export class SqliteSerializePlugin implements KyselyPlugin {
     if (rows && ctx === 'SelectQueryNode') {
       return {
         ...args.result,
-        rows: this.parseResult(rows),
+        rows: await this.parseResult(rows),
       }
     }
     return args.result

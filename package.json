@@ -15,7 +15,7 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "clean": "rimraf packages/*/dist",
+    "clean": "del-cli \"packages/*/dist\"",
     "dev": "pnpm -r -F \"./packages/*\" dev",
     "build": "pnpm clean && pnpm -r -F \"./packages/*\" build",
     "release": "bumpp package.json packages/**/package.json",
@@ -28,21 +28,21 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@subframe7536/eslint-config": "^0.1.0",
-    "@types/node": "^18.11.18",
-    "bumpp": "^8.2.1",
-    "changelogithub": "^0.12.7",
-    "eslint": "^8.33.0",
-    "happy-dom": "^8.2.6",
+    "@subframe7536/eslint-config": "^0.1.1",
+    "@types/node": "^18.15.11",
+    "bumpp": "^9.1.0",
+    "changelogithub": "^0.12.9",
+    "del-cli": "^5.0.0",
+    "eslint": "^8.38.0",
+    "happy-dom": "^9.8.2",
     "husky": "^8.0.3",
     "kysely": "^0.24.2",
-    "lint-staged": "^13.1.1",
-    "rimraf": "^3.0.2",
-    "tsx": "^3.12.3",
-    "typescript": "^4.9.5",
-    "unbuild": "^1.1.1",
-    "vite": "^4.1.1",
-    "vitest": "^0.28.4"
+    "lint-staged": "^13.2.1",
+    "tsx": "^3.12.6",
+    "typescript": "^5.0.4",
+    "unbuild": "^1.2.1",
+    "vite": "^4.2.2",
+    "vitest": "^0.30.1"
   },
   "lint-staged": {
     "*": [

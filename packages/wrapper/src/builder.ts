@@ -10,7 +10,7 @@ export class SqliteDB<DB extends Record<string, any>> {
   public kysely!: Kysely<DB>
   private status!: DBStatus
   private tableMap!: Map<string, ITable<DB[Extract<keyof DB, string>]>>
-  constructor(option: SqliteDBOption<DB>) {
+  public constructor(option: SqliteDBOption<DB>) {
     const { dialect, tables, dropTableBeforeInit: truncateBeforeInit, errorLogger, queryLogger, plugins: additionalPlugin } = option
     const plugins: KyselyPlugin[] = [new SqliteSerializePlugin()]
     additionalPlugin && plugins.push(...additionalPlugin)
@@ -55,7 +55,7 @@ export class SqliteDB<DB extends Record<string, any>> {
 
   public async init(dropTableBeforeInit = false) {
     for (const [tableName, table] of this.tableMap) {
-      const { column: columnList, property: tableProperty } = table
+      const { columns: columnList, property: tableProperty } = table
       if (dropTableBeforeInit || this.status === DBStatus.needDrop) {
         await this.kysely.schema.dropTable(tableName).ifExists().execute().catch()
       }
