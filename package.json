@@ -1,7 +1,7 @@
 {
   "name": "kysely-sqlite",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
   "description": "",
   "author": {
@@ -26,11 +26,13 @@
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
     "prepare": "husky install",
-    "cz": "czg"
+    "cz": "czg",
+    "publish": "release-it --monorepo"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.1",
     "@commitlint/config-conventional": "^17.6.1",
+    "@release-it/conventional-changelog": "^5.1.1",
     "@subframe7536/eslint-config": "^0.1.1",
     "@types/node": "^18.15.11",
     "bumpp": "^9.1.0",
@@ -43,6 +45,7 @@
     "husky": "^8.0.3",
     "kysely": "^0.24.2",
     "lint-staged": "^13.2.1",
+    "release-it": "^15.10.1",
     "tsx": "^3.12.6",
     "typescript": "^5.0.4",
     "unbuild": "^1.2.1",
