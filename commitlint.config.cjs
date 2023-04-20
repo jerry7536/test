@@ -1,7 +1,6 @@
 /** @type {import('cz-git').UserConfig} */
 module.exports = {
   rule: {
-
   },
   prompt: {
     path: 'cz-git',
@@ -23,11 +22,6 @@ module.exports = {
       confirmCommit: 'Are you sure you want to proceed with the commit above?',
     },
     types: [
-      {
-        value: 'break',
-        name: 'break!:     have break changes',
-        emoji: ':triangular_flag_on_post:',
-      },
       {
         value: 'feat',
         name: 'feat:     A new feature',
@@ -87,17 +81,24 @@ module.exports = {
     useEmoji: true,
     emojiAlign: 'center',
     themeColorCode: '',
-    scopes: [],
+    scopes: [
+      'plugin',
+      'wasm',
+      'tauri',
+      'wrapper',
+      'workspace',
+    ],
     allowCustomScopes: true,
     allowEmptyScopes: true,
     customScopesAlign: 'bottom',
     customScopesAlias: 'custom',
     emptyScopesAlias: 'empty',
     upperCaseSubject: false,
-    markBreakingChangeMode: false,
+    markBreakingChangeMode: true,
     allowBreakingChanges: [
       'feat',
       'fix',
+      'chore',
     ],
     breaklineNumber: 100,
     breaklineChar: '|',
@@ -108,7 +109,7 @@ module.exports = {
         name: 'closed:   ISSUES has been processed',
       },
     ],
-    customIssuePrefixAlign: 'top',
+    customIssuePrefixAlign: 'bottom',
     emptyIssuePrefixAlias: 'skip',
     customIssuePrefixAlias: 'custom',
     allowCustomIssuePrefix: true,
