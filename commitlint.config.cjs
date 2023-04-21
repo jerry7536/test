@@ -84,7 +84,7 @@ module.exports = {
         emoji: ':rewind:',
       },
     ],
-    useEmoji: true,
+    // useEmoji: true,
     emojiAlign: 'left',
     themeColorCode: '',
     scopes: [
