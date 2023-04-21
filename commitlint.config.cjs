@@ -85,7 +85,7 @@ module.exports = {
       },
     ],
     useEmoji: true,
-    emojiAlign: 'center',
+    emojiAlign: 'left',
     themeColorCode: '',
     scopes: [
       'plugin',
