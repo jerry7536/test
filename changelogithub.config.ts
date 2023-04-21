@@ -2,6 +2,17 @@ import { defineConfig } from 'changelogithub'
 
 export default defineConfig({
   types: {
-    improve: { title: '💡 Improvement' },
+    feat: {
+      title: '🚀 Features',
+    },
+    fix: {
+      title: '🐞 Bug Fixes',
+    },
+    perf: {
+      title: '🏎 Performance',
+    },
   },
+  output: 'CHANGELOG.md',
+  draft: true,
+
 })
