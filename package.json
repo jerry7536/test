@@ -26,7 +26,7 @@
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
     "prepare": "husky install",
-    "cz": "czg"
+    "commit": "czg"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.1",

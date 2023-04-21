@@ -54,6 +54,6 @@ export interface AutoSyncOption<T> {
   plugins?: Array<KyselyPlugin>
 }
 
-export type RawTableInfo = {
+// export type RawTableInfo = {
 
-}
+// }
