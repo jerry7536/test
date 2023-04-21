@@ -72,7 +72,7 @@ class ConnectionMutex {
     resolve?.()
   }
 }
-class TauriSqlConnection {
+class TauriSqlConnection implements DatabaseConnection {
   #db: TauriSqlDB
   constructor(db: any) {
     this.#db = db
