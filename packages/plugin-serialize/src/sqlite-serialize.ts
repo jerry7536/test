@@ -1,9 +1,7 @@
 export type Serializer = (parameter: unknown) => unknown
-export type Deserializer = (parameter: unknown, type: BlobType) => unknown
+export type Deserializer = (parameter: unknown, type: BlobTypeConstructor) => unknown
 export type BlobType = 'Uint8Array' | 'Uint16Array' | 'Uint32Array' | 'Float32Array' | 'Float64Array'
-function getBlobType(type: BlobType) {
-  return Reflect.get(globalThis, type)
-}
+export type BlobTypeConstructor = Uint8ArrayConstructor | Uint16ArrayConstructor | Uint32ArrayConstructor | Float32ArrayConstructor | Float64ArrayConstructor
 export const defaultSerializer: Serializer = (parameter) => {
   if (parameter === undefined
     || parameter === null
@@ -27,7 +25,7 @@ export const defaultDeserializer: Deserializer = (parameter, type) => {
     return parameter
   }
   if (typeof parameter === 'object' && 'buffer' in parameter) {
-    return getBlobType(type).from(parameter as any)
+    return type.from(parameter as any)
   }
   if (typeof parameter === 'string') {
     if (/^(true|false)$/.test(parameter)) {

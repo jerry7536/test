@@ -21,7 +21,7 @@ describe('dialect test', () => {
     })
     const db = new Kysely<DB>({
       dialect,
-      plugins: [new SqliteSerializePlugin({ blobType: 'Float32Array' })],
+      plugins: [new SqliteSerializePlugin({ blobType: Float32Array })],
     })
     await db.schema.createTable('test')
       .addColumn('id', 'integer', build => build.autoIncrement().primaryKey())
