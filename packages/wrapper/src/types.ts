@@ -45,15 +45,3 @@ export interface SqliteDBOption<T> {
   errorLogger?: (reason: unknown) => any
   plugins?: Array<KyselyPlugin>
 }
-
-export interface AutoSyncOption<T> {
-  tables: Tables<T>
-  dialect: Dialect
-  queryLogger?: (queryInfo: CompiledQuery, time: number) => any
-  errorLogger?: (reason: unknown) => any
-  plugins?: Array<KyselyPlugin>
-}
-
-// export type RawTableInfo = {
-
-// }
