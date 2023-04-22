@@ -1,6 +1,6 @@
 import { describe, test } from 'vitest'
 import init from 'sql.js'
-import { Kysely, sql } from 'kysely'
+import { Kysely } from 'kysely'
 import { SqliteSerializePlugin } from 'kysely-plugin-serialize'
 import { SqlJsDialect } from '../src/sqljs-dialect'
 import type { DB } from './type'
@@ -21,7 +21,7 @@ describe('dialect test', () => {
     })
     const db = new Kysely<DB>({
       dialect,
-      plugins: [new SqliteSerializePlugin()],
+      plugins: [new SqliteSerializePlugin({ blobType: 'Float32Array' })],
     })
     await db.schema.createTable('test')
       .addColumn('id', 'integer', build => build.autoIncrement().primaryKey())
@@ -29,8 +29,6 @@ describe('dialect test', () => {
       .addColumn('blobtest', 'blob')
       .ifNotExists()
       .execute()
-    await db.schema.createIndex('idx_test').on('test').columns(['id', 'name']).execute()
-    sql`PRAGMA index_xinfo(idx_test)`
     await db.transaction().execute((trx) => {
       return trx.insertInto('test')
         .values({
